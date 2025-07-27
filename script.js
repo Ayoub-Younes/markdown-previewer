@@ -57,6 +57,25 @@ greet('Markdown');
 const App = () => {
   const [input, setInput] = React.useState(defaultCode);
 
+    React.useEffect(() => {
+    const img = document.getElementById('background-img');
+
+    const showContent = () => {
+      document.body.classList.remove('loading');
+      document.body.classList.add('loaded');
+    };
+
+    if (img && img.complete) {
+      showContent();
+    } else if (img) {
+      img.onload = showContent;
+    }
+
+    const fallback = setTimeout(showContent, 3000); // Fallback
+
+    return () => clearTimeout(fallback); // Clean up
+  }, []);
+
   const handleChange = (event) => {
     setInput(event.target.value);
   };
@@ -76,3 +95,20 @@ const App = () => {
 };
 
 ReactDOM.render(<App />, document.getElementById("root"));
+
+document.addEventListener('DOMContentLoaded', function () {
+  const img = document.getElementById('background-img');
+
+  function showContent() {
+    document.body.classList.remove('loading');
+    document.body.classList.add('loaded');
+  }
+
+  if (img.complete) {
+    showContent();
+  } else {
+    img.onload = showContent;
+  }
+
+  setTimeout(showContent, 3000); // fallback
+});
